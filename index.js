@@ -4,8 +4,8 @@ var exec = require('child_process').exec
     , spawn = require('child_process').spawn
     , path = require('path')
     , domain = require('domain')
-    , d = domain.create()
-    ,multipart = require('./multipart');
+    , d = domain.create();
+
 
 /**
  * log
