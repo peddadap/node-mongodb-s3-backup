@@ -9,7 +9,7 @@
   "preferGlobal": "true",
   "scripts": {
     "start": "node ./bin/mongodb_s3_backup.js ./config.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"no test specified\" && exit 0"
   },
   "repository": "https://github.com/peddadap/node-mongodb-s3-backup.git",
   "keywords": [
