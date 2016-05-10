@@ -1,7 +1,7 @@
 {
-  "name": "mongodb_s3_backup",
+  "name": "mongo-shard-s3-backup",
   "version": "0.0.8",
-  "description": "A tool to help backup your mongodb databases to s3.",
+  "description": "A tool to help backup your mongodb shard databases to s3.",
   "main": "index.js",
   "bin": {
     "mongodb_s3_backup": "./bin/mongodb_s3_backup.js"
@@ -11,7 +11,7 @@
     "start": "node ./bin/mongodb_s3_backup.js ./config.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "https://github.com/theycallmeswift/node-mongodb-s3-backup.git",
+  "repository": "https://github.com/peddadap/node-mongodb-s3-backup.git",
   "keywords": [
     "Mongodb",
     "S3",
