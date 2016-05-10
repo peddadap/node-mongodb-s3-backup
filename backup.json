@@ -1,0 +1,20 @@
+{
+  "mongodb": {
+    "host": "127.0.0.1",
+    "port": 27021,
+    "username": false,
+    "password": false,
+    "db": "dim3"
+  },
+  "s3": {
+    "key": "AKIAI2377YWZQJMLCQEA",
+    "secret": "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",
+    "bucket": "dim-mongo-backup",
+    "destination": "/",
+    "encrypt": false,
+    "region": "us-west-2"
+  },
+  "cron": {
+    "time": "11:59"
+  }
+}

@@ -1,10 +1,11 @@
 'use strict';
 
 var exec = require('child_process').exec
-  , spawn = require('child_process').spawn
-  , path = require('path')
-  , domain = require('domain')
-  , d = domain.create();
+    , spawn = require('child_process').spawn
+    , path = require('path')
+    , domain = require('domain')
+    , d = domain.create()
+    ,multipart = require('./multipart');
 
 /**
  * log
@@ -16,8 +17,8 @@ var exec = require('child_process').exec
  */
 function log(message, tag) {
   var util = require('util')
-    , color = require('cli-color')
-    , tags, currentTag;
+      , color = require('cli-color')
+      , tags, currentTag;
 
   tag = tag || 'info';
 
@@ -40,7 +41,7 @@ function log(message, tag) {
  */
 function getArchiveName(databaseName) {
   var date = new Date()
-    , datestring;
+      , datestring;
 
   datestring = [
     databaseName,
@@ -85,7 +86,7 @@ function removeRF(target, callback) {
  */
 function mongoDump(options, directory, callback) {
   var mongodump
-    , mongoOptions;
+      , mongoOptions;
 
   callback = callback || function() { };
 
@@ -136,7 +137,7 @@ function mongoDump(options, directory, callback) {
  */
 function compressDirectory(directory, input, output, callback) {
   var tar
-    , tarOptions;
+      , tarOptions;
 
   callback = callback || function() { };
 
@@ -165,7 +166,7 @@ function compressDirectory(directory, input, output, callback) {
 
 /**
  * sendToS3
- *
+ * Implementation Pending to do multi part update
  * Sends a file or directory to S3.
  *
  * @param options   s3 options [key, secret, bucket]
@@ -174,45 +175,52 @@ function compressDirectory(directory, input, output, callback) {
  * @param callback  callback(err)
  */
 function sendToS3(options, directory, target, callback) {
-  var knox = require('knox')
-    , sourceFile = path.join(directory, target)
-    , s3client
-    , destination = options.destination || '/'
-    , headers = {};
+  /*var knox = require('knox')
+   , sourceFile = path.join(directory, target)
+   , s3client
+   , destination = options.destination || '/'
+   , headers = {};
 
-  callback = callback || function() { };
+   callback = callback || function() { };
 
-  // Deleting destination because it's not an explicitly named knox option
-  delete options.destination;
-  s3client = knox.createClient(options);
+   // Deleting destination because it's not an explicitly named knox option
+   delete options.destination;
+   s3client = knox.createClient(options);
 
-  if (options.encrypt)
-    headers = {"x-amz-server-side-encryption": "AES256"}
+   if (options.encrypt)
+   headers = {"x-amz-server-side-encryption": "AES256"}
 
-  log('Attemping to upload ' + target + ' to the ' + options.bucket + ' s3 bucket');
-  s3client.putFile(sourceFile, path.join(destination, target), headers, function(err, res){
-    if(err) {
-      return callback(err);
-    }
+   log('Attemping to upload ' + target + ' to the ' + options.bucket + ' s3 bucket');
+   s3client.putFile(sourceFile, path.join(destination, target), headers, function(err, res){
+   if(err) {
+   return callback(err);
+   }
 
-    res.setEncoding('utf8');
+   res.setEncoding('utf8');
 
-    res.on('data', function(chunk){
-      if(res.statusCode !== 200) {
-        log(chunk, 'error');
-      } else {
-        log(chunk);
-      }
-    });
+   res.on('data', function(chunk){
+   if(res.statusCode !== 200) {
+   log(chunk, 'error');
+   } else {
+   log(chunk);
+   }
+   });
 
-    res.on('end', function(chunk) {
-      if (res.statusCode !== 200) {
-        return callback(new Error('Expected a 200 response from S3, got ' + res.statusCode));
-      }
-      log('Successfully uploaded to s3');
-      return callback();
-    });
-  });
+   res.on('end', function(chunk) {
+   if (res.statusCode !== 200) {
+   return callback(new Error('Expected a 200 response from S3, got ' + res.statusCode));
+   }
+   log('Successfully uploaded to s3');
+   return callback();
+   });
+   });
+
+   multipart.uploadFile(sourceFile,function(result){
+
+   console.log('value returned from s3 multi-part module upload',result);
+   })*/
+
+  callback("Implementatioin Pending for S3 load")
 }
 
 /**
@@ -226,16 +234,17 @@ function sendToS3(options, directory, target, callback) {
  * @param callback        callback(err)
  */
 function sync(mongodbConfig, s3Config, callback) {
-  var tmpDir = path.join(require('os').tmpDir(), 'mongodb_s3_backup')
-    , backupDir = path.join(tmpDir, mongodbConfig.db)
-    , archiveName = getArchiveName(mongodbConfig.db)
-    , async = require('async')
-    , tmpDirCleanupFns;
+  //var tmpDir = path.join(require('os').tmpDir(), 'mongodb_s3_backup')
+  var tmpDir = path.join('/data/tmp/', 'mongodb_s3_backup')
+      , backupDir = path.join(tmpDir, mongodbConfig.db)
+      , archiveName = getArchiveName(mongodbConfig.db)
+      , async = require('async')
+      , tmpDirCleanupFns;
 
   callback = callback || function() { };
 
   tmpDirCleanupFns = [
-    async.apply(removeRF, backupDir),
+    //async.apply(removeRF, backupDir),
     async.apply(removeRF, path.join(tmpDir, archiveName))
   ];
 
@@ -257,10 +266,10 @@ function sync(mongodbConfig, s3Config, callback) {
 
   // this cleans up folders in case of EPIPE error from AWS connection
   d.on('error', function(err) {
-      d.exit()
-      async.series(tmpDirCleanupFns, function() {
-        throw(err);
-      });
+    d.exit()
+    async.series(tmpDirCleanupFns, function() {
+      throw(err);
+    });
   });
 
 }

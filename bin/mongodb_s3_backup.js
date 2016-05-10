@@ -3,20 +3,20 @@
 /* Dependencies */
 
 var cli = require('cli')
-  , path = require('path')
-  , util = require('util')
-  , backup = require('../')
-  , cronJob = require('cron').CronJob
-  , pkg = require('../package.json')
-  , crontab = "0 0 * * *"
-  , timezone = "UTC"
-  , time = [0, 0]
-  , options, configPath, config;
+    , path = require('path')
+    , util = require('util')
+    , backup = require('../')
+    , cronJob = require('cron').CronJob
+    , pkg = require('../package.json')
+    , crontab = "0 0 * * *"
+    , timezone = "UTC"
+    , time = [0, 0]
+    , options, configPath, config;
 
 cli
-  .enable('version')
-  .setApp(pkg.name, pkg.version)
-  .setUsage(cli.app + ' [OPTIONS] <path to json config>');
+    .enable('version')
+    .setApp(pkg.name, pkg.version)
+    .setUsage(cli.app + ' [OPTIONS] <path to json config>');
 
 options = cli.parse({
   now:   ['n', 'Run sync on start']
