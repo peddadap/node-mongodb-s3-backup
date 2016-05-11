@@ -20,10 +20,10 @@
   "author": "Swift <theycallmeswift@gmail.com>",
   "license": "Beerware",
   "dependencies": {
-    "async": "~0.1.22",
+    "async": "^0.1.22",
     "cli": "~0.4.4-2",
-    "cli-color": "~0.2.1",
-    "cron": "~1.0.1",
+    "cli-color": "^0.2.3",
+    "cron": "^1.0.9",
     "knox": "~0.8.0",
     "time": "^0.11.2"
   },
