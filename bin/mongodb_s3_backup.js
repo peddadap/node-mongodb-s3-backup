@@ -33,7 +33,7 @@ backup.log('Loading config file (' + configPath + ')');
 config = require(configPath);
 
 if(options.now) {
-  backup.sync(config.mongodb, config.s3, function(err) {
+  backup.sync(config, config.s3, function(err) {
     process.exit(err ? 1 : 0);
   });
 } else {
@@ -61,7 +61,7 @@ if(options.now) {
   }
 
   new cronJob(crontab, function(){
-    backup.sync(config.mongodb, config.s3);
+    backup.sync(config, config.s3);
   }, null, true, timezone);
   backup.log('MongoDB S3 Backup Successfully scheduled (' + crontab + ')');
 }
