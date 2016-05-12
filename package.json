@@ -1,6 +1,6 @@
 {
   "name": "mongo-shard-s3-backup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A tool to help backup your mongodb shard databases to s3.",
   "main": "index.js",
   "bin": {
