@@ -17,7 +17,7 @@
     "S3",
     "backup"
   ],
-  "author": "Swift <theycallmeswift@gmail.com>",
+  "author": "ppeddada <ppeddada@gmail.com>",
   "license": "Beerware",
   "dependencies": {
     "async": "^0.1.22",
